@@ -31,6 +31,14 @@ export interface ICreateInvoiceResult {
 }
 
 export interface ICryptomusService {
-  createInvoice(amount: number, order_id: string, currency: string): void;
-  check(id: string): void;
+  createInvoice(
+    amount: number,
+    orderId: string,
+    currency: string,
+  ): Promise<ICreateInvoiceResult | undefined>;
+  check(id: string): Promise<ICreateInvoiceResult | undefined>;
+  getHeader(payload: string): {
+    merchantId: string;
+    sign: string;
+  };
 }
