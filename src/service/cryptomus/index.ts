@@ -12,22 +12,21 @@ export class CryptomusServiceFactory implements ICryptomusService {
   }
   async createInvoice(amount: number, orderId: string, currency: string) {
     try {
-      console.log('this.merchantId', this.merchantId);
       const payload = {
         amount: amount.toString(),
-        orderId,
+        order_id: orderId,
         currency,
       };
 
       const { data } = await axios.post<ICreateInvoiceResult>(
-        'https://api.cryptomus.com/v1/payment',
+        `${cryptomusConfig.API_URL}/payment`,
         payload,
         { headers: this.getHeader(JSON.stringify(payload)) },
       );
 
       return data as ICreateInvoiceResult;
     } catch (e) {
-      console.log('e', e);
+      console.log('e', e.response.data);
     }
   }
 
@@ -38,7 +37,7 @@ export class CryptomusServiceFactory implements ICryptomusService {
       };
 
       const { data } = await axios.post<ICreateInvoiceResult>(
-        'https://api.cryptomus.com/v1/payment/info',
+        `${cryptomusConfig.API_URL}/info`,
         payload,
         { headers: this.getHeader(JSON.stringify(payload)) },
       );
@@ -56,7 +55,7 @@ export class CryptomusServiceFactory implements ICryptomusService {
       .digest('hex');
 
     return {
-      merchantId: this.merchantId,
+      merchant: this.merchantId,
       sign,
     };
   }

@@ -11,34 +11,34 @@ export class StartCommand extends AbstractCommand {
 
   handler(): void {
     this.bot.start(async (ctx) => {
+      ctx.reply(
+        'Do you want to pay?',
+        Markup.inlineKeyboard([
+          Markup.button.callback('➕', 'pay_yes'),
+          Markup.button.callback('➖', 'pay_no'),
+        ]),
+      );
+    });
+
+    this.bot.action('pay_yes', async (ctx) => {
+      ctx.session.pay = true;
+
       const invoice = await CryptomusService.createInvoice(
         10,
         randomUUID(),
         'USD',
       );
 
-      console.log(invoice);
-
       if (!invoice) {
         ctx.reply('Failed to create invoice');
       } else {
-        ctx.reply(invoice.result.url );
-        // ctx.reply(
-        //   'Do you like?',
-        //   Markup.inlineKeyboard([
-        //     Markup.button.callback('👍', 'like'),
-        //     Markup.button.callback('👎', 'dislike'),
-        //   ]),
-        // );
+        ctx.reply(invoice.result.url);
       }
-    });
 
-    this.bot.action('like', (ctx) => {
-      ctx.session.like = true;
       ctx.reply('👍');
     });
-    this.bot.action('dislike', (ctx) => {
-      ctx.session.like = false;
+    this.bot.action('pay_no', (ctx) => {
+      ctx.session.pay = false;
       ctx.reply('🥺');
     });
   }

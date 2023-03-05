@@ -38,7 +38,7 @@ export interface ICryptomusService {
   ): Promise<ICreateInvoiceResult | undefined>;
   check(id: string): Promise<ICreateInvoiceResult | undefined>;
   getHeader(payload: string): {
-    merchantId: string;
+    merchant: string;
     sign: string;
   };
 }
